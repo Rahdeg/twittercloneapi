@@ -18,8 +18,8 @@ const TweetSchema = new mongoose.Schema({
 export const TweetModel = mongoose.model('Tweets',TweetSchema);
 
 
-export const getTweets =()=> TweetModel.find();
+export const getTweets =(id:string)=> TweetModel.find({ user_id: id });
 export const getTweetById = (id:string) => TweetModel.findById(id);
 export const createTweet = (values: Record<string, any>) => new TweetModel(values).save().then((user)=>user.toObject());
 export const deleteTweetById =(id:string) => TweetModel.findOneAndDelete({_id:id});
-export const updateTweetById =(id:string, values:Record<string, any>)=>TweetModel.findByIdAndUpdate(id,values);
+export const updateTweetById =(id:string, values:Record<string, any>)=>TweetModel.findByIdAndUpdate(id,values,{ new: true });

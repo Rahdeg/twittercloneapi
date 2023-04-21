@@ -6,7 +6,7 @@ const ReplySchema = new mongoose.Schema({
         ref:'Users',
         required:true
     },
-    tweet: {
+    tweet_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tweet',
         required: true

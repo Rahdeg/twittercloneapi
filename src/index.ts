@@ -8,6 +8,7 @@ import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose'
 import router from './routers'
+const Errormiddleware = require("./middlewares/errormiddleware")
 
 const app = express();
 
@@ -36,4 +37,14 @@ mongoose.Promise= Promise;
 mongoose.connect(DB_URI,{dbName: "Twitter"});
 mongoose.connection.on("error",(error:Error)=>console.log(error));
 
+
 app.use('/',router());
+
+app.all("*", (req, res) => {
+    res.send({
+      status: false,
+      messsage: "Oops! you've hit an invalid route.",
+    });
+  });
+
+app.use(Errormiddleware);

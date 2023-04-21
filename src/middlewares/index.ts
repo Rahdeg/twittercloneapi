@@ -26,17 +26,15 @@ export const isAuthenticated = async (req: express.Request, res: express.Respons
     try {
         const sessionToken = req.cookies['RAHEEM_AUTH'];
         if (!sessionToken) {
-        return  res.sendStatus(403);
+        return res.status(404).json({ message: 'Unauthorized' });
         };
         const existingUser = await getUserBySessionToken(sessionToken);
         if (!existingUser) {
-            return  res.sendStatus(403);
+            return res.status(404).json({ message: 'Unauthorized' });
         }
     merge(req,{identity:existingUser});
         return next();
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(400);
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
     }
 }
-
