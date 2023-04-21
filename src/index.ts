@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+require("dotenv").config()
 import { config } from './config/config';
 import express from 'express';
 import http from 'http';
@@ -17,17 +17,20 @@ app.use(cors({
 
 app.use(compression());
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(express.json());
 
-const server = http.createServer(app);
 
-server.listen(8080,()=>{
+// const server = http.createServer(app);
+
+app.listen(8080,()=>{
     console.log("server running on http://localhost:8080/");
 })
 
 
 
-const DB_URI = config.dbUrl
+const DB_URI = config.dbUrI
+
+
 
 mongoose.Promise= Promise;
 mongoose.connect(DB_URI,{dbName: "Twitter"});
