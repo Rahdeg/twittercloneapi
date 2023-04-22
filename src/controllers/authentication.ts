@@ -1,64 +1,72 @@
-import { getUserByEmail,createUser } from '../db/users';
-import express from 'express';
-import { authentication, random } from '../helpers/index';
+import { getUserByEmail, createUser } from "../db/users";
+import express from "express";
+import { authentication, random } from "../helpers/index";
 
+export const login = async (req: express.Request, res: express.Response) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(401)
+        .json({ message: "Please add a username and password" });
+    }
+    const user = await getUserByEmail(email).select(
+      "+authentication.salt +authentication.password"
+    );
 
-export const login = async(req: express.Request, res: express.Response)=>{
-    try {
-        const {email, password} = req.body;
-        if (!email || !password) {
-            return res.sendStatus(400)
-        }
-    const user = await getUserByEmail(email).select("+authentication.salt +authentication.password");
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
 
-        if (!user) {
-            return res.sendStatus(400)
-        }
-        
     const expectedHash = authentication(user.authentication?.salt, password);
 
     if (user.authentication?.password !== expectedHash) {
-        return res.sendStatus(403);
+      return res.status(401).json({ message: "Invalid username or password" });
     }
 
     const salt = random();
-    user.authentication.sessionToken = authentication(salt, user._id.toString());
+    user.authentication.sessionToken = authentication(
+      salt,
+      user._id.toString()
+    );
     await user.save();
-    res.cookie("RAHEEM_AUTH", user.authentication.sessionToken,{domain:"localhost", path:'/'});
-    
+    res.cookie("RAHEEM_AUTH", user.authentication.sessionToken, {
+      domain: "localhost",
+      path: "/",
+    });
+
     return res.status(200).json(user).end();
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+};
 
-    }  catch (error: any) {
-        return res.status(400).json({ error: error.message });
+export const register = async (req: express.Request, res: express.Response) => {
+  try {
+    const { username, email, password } = req.body;
+    if (!email || !password || !username) {
+      return res
+        .status(400)
+        .json({ message: "Please add an email,username and password" });
     }
-}
-
-
-export const register = async (req: express.Request, res: express.Response)=>{
-    try {
-        const { username, email, password} = req.body
-        if (!email || !password || !username) {
-            return res.sendStatus(400);
-        }
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-        return res.sendStatus(400);
+      return res.status(401).json({ message: "User Already exist" });
     }
     const salt = random();
     const user = await createUser({
-        email,
-        username,
-        authentication:{
-            salt,
-            password:authentication(salt,password)
-        },
-    })
+      email,
+      username,
+      authentication: {
+        salt,
+        password: authentication(salt, password),
+      },
+    });
     return res.status(200).json(user).end();
-    }  catch (error: any) {
-        return res.status(400).json({ error: error.message });
-    }
-}
-
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+};
 
 // const User = require('../models/user');
 

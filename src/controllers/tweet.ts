@@ -118,3 +118,103 @@ export const deleteTweet = async (
     res.status(500).json({ message: "Failed to delete tweet", error });
   }
 };
+
+export const increaseTweets = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const user = await getUserById(req.params.id);
+    const tweet = await getTweetById(req.params.tweetId);
+
+    if (!user) {
+      return res.status(404).json({ msg: `No user with id ${req.params.id}` });
+    }
+
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    tweet.retweet += 1;
+    await tweet.save();
+
+    res.status(200).json({ message: "Tweet updated successfully", tweet });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update tweet", error });
+  }
+};
+
+export const decreaseTweets = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const user = await getUserById(req.params.id);
+    const tweet = await getTweetById(req.params.tweetId);
+
+    if (!user) {
+      return res.status(404).json({ msg: `No user with id ${req.params.id}` });
+    }
+
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    tweet.retweet <= 0 ? 0 : (tweet.retweet -= 1);
+    await tweet.save();
+
+    res.status(200).json({ message: "Tweet updated successfully", tweet });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update tweet", error });
+  }
+};
+
+export const increaseLikes = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const user = await getUserById(req.params.id);
+    const tweet = await getTweetById(req.params.tweetId);
+
+    if (!user) {
+      return res.status(404).json({ msg: `No user with id ${req.params.id}` });
+    }
+
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    tweet.likes += 1;
+    await tweet.save();
+
+    res.status(200).json({ message: "Tweet updated successfully", tweet });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update tweet", error });
+  }
+};
+
+export const decreaseLikes = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const user = await getUserById(req.params.id);
+    const tweet = await getTweetById(req.params.tweetId);
+
+    if (!user) {
+      return res.status(404).json({ msg: `No user with id ${req.params.id}` });
+    }
+
+    if (!tweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    tweet.likes <= 0 ? 0 : (tweet.likes -= 1);
+    await tweet.save();
+
+    res.status(200).json({ message: "Tweet updated successfully", tweet });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update tweet", error });
+  }
+};

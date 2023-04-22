@@ -33,7 +33,7 @@ export const deleteUser = async (
     const { id } = req.params;
     const deletedUser = await deleteUserById(id);
     if (!deletedUser) {
-      return res.sendStatus(403);
+      return res.status(404).json({ msg: `No user with id ${req.params.id}` });
     }
 
     return res.status(200).json(deletedUser);
