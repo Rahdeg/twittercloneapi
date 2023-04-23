@@ -8,23 +8,25 @@ These instructions will help you get a copy of the project up and running on you
 
 #Prerequisites
 
-Node.js (version v18.15.0) and npm (Node Package Manager) installed on your local machine.
+Node.js (version v18.15.0) and npm (Node Package Manager) installed on your local machine and a mongoDb database is used in the project
 
 #Installing
 
 Clone the repository to your local machine using the following command:
 
-git clone [repository URL]
+git clone https://github.com/Rahdeg/twittercloneapi.git
 
 Change directory to the project folder:
 
-cd [project folder]
+cd twittercloneapi
 
 Install the project dependencies using npm:
 
 npm install
 
 Create a .env file in the root of the project folder and configure the environment variables required for the project.
+the mongodb uri is important in the env files
+
 
 #Running the Project
 
